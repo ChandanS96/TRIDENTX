@@ -43,4 +43,11 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined || context === null) {
+    console.warn("useAuth used outside of AuthProvider, returning safe defaults.");
+    return { user: null, login: () => {}, logout: () => {}, loading: false };
+  }
+  return context;
+};
