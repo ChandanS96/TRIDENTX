@@ -1,16 +1,12 @@
-import { Router } from 'express';
+import { Router, Request } from 'express';
 import { query } from '../db';
-import { authenticate, AuthRequest } from '../middleware/authMiddleware';
 
 const router = Router();
 
-router.use(authenticate);
-
-router.get('/', async (req: AuthRequest, res) => {
+router.get('/', async (req: Request, res) => {
   try {
     const result = await query(
-      'SELECT id, url, normalized_url, hostname, trust_score, risk_level, created_at FROM scans WHERE user_id = $1 ORDER BY created_at DESC',
-      [req.user?.id]
+      'SELECT id, url, normalized_url, hostname, trust_score, risk_level, created_at FROM scans ORDER BY created_at DESC'
     );
     res.json({ success: true, data: result.rows });
   } catch (error) {
@@ -19,12 +15,12 @@ router.get('/', async (req: AuthRequest, res) => {
   }
 });
 
-router.get('/:id', async (req: AuthRequest, res) => {
+router.get('/:id', async (req: Request, res) => {
   try {
     const { id } = req.params;
     const result = await query(
-      'SELECT * FROM scans WHERE id = $1 AND user_id = $2',
-      [id, req.user?.id]
+      'SELECT * FROM scans WHERE id = $1',
+      [id]
     );
     
     if (result.rows.length === 0) {
@@ -38,12 +34,12 @@ router.get('/:id', async (req: AuthRequest, res) => {
   }
 });
 
-router.delete('/:id', async (req: AuthRequest, res) => {
+router.delete('/:id', async (req: Request, res) => {
   try {
     const { id } = req.params;
     const result = await query(
-      'DELETE FROM scans WHERE id = $1 AND user_id = $2 RETURNING id',
-      [id, req.user?.id]
+      'DELETE FROM scans WHERE id = $1 RETURNING id',
+      [id]
     );
     
     if (result.rows.length === 0) {

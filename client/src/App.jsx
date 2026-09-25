@@ -5,11 +5,8 @@ import Analyze from './pages/Analyze';
 import AnalysisResult from './pages/AnalysisResult';
 import ScanHistory from './pages/ScanHistory';
 import ScanDetails from './pages/ScanDetails';
-import Login from './pages/Login';
-import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import HowItWorks from './pages/HowItWorks';
-import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -20,15 +17,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/analyze" element={<Analyze />} />
           <Route path="/analysis-result" element={<AnalysisResult />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
-          
-          <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/history" element={<ScanHistory />} />
-            <Route path="/scan/:id" element={<ScanDetails />} />
-          </Route>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/history" element={<ScanHistory />} />
+          <Route path="/scan/:id" element={<ScanDetails />} />
         </Routes>
       </main>
       <footer className="py-6 text-center text-gray-500 text-sm border-t border-gray-800">

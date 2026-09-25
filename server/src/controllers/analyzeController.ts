@@ -49,29 +49,23 @@ export const analyzeWebsite = async (req: Request, res: Response) => {
       analyzedAt: new Date().toISOString()
     };
 
-    // 4. Save if authenticated (optional in this route, or handle explicitly if req.user exists)
-    // Wait, the req might have user if auth middleware is applied optionally.
-    // For now, let's just return the result. Saving might be done here if we pass the auth middleware.
-    const user = (req as any).user;
-    if (user) {
-      await query(
-        `INSERT INTO scans (user_id, url, normalized_url, hostname, trust_score, risk_level, signals, reasons, ai_summary, ai_explanation, recommendation)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
-        [
-          user.id,
-          url,
-          normalized,
-          parsedUrl.hostname,
-          score,
-          riskLevel,
-          JSON.stringify(signals),
-          JSON.stringify(reasons),
-          aiExplanation.summary,
-          aiExplanation.riskExplanation,
-          aiExplanation.recommendedAction
-        ]
-      );
-    }
+    // 4. Save scan to history
+    await query(
+      `INSERT INTO scans (url, normalized_url, hostname, trust_score, risk_level, signals, reasons, ai_summary, ai_explanation, recommendation)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      [
+        url,
+        normalized,
+        parsedUrl.hostname,
+        score,
+        riskLevel,
+        JSON.stringify(signals),
+        JSON.stringify(reasons),
+        aiExplanation.summary,
+        aiExplanation.riskExplanation,
+        aiExplanation.recommendedAction
+      ]
+    );
 
     res.json({ success: true, data: result });
   } catch (error) {

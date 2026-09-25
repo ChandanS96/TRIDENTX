@@ -48,16 +48,31 @@ export const query = async (text: string, params?: any[]) => {
     if (query.includes('insert into scans')) {
       const id = 'demo-scan-' + Date.now();
       const scan = {
-        id, user_id: params![0], url: params![1], normalized_url: params![2], hostname: params![3],
-        trust_score: params![4], risk_level: params![5], created_at: new Date().toISOString()
+        id, url: params![0], normalized_url: params![1], hostname: params![2],
+        trust_score: params![3], risk_level: params![4], created_at: new Date().toISOString(),
+        signals: params![5], reasons: params![6], ai_summary: params![7], ai_explanation: params![8], recommendation: params![9]
       };
       mockScans.push(scan);
       return { rows: [scan] };
     }
     
     if (query.includes('select id, url, normalized_url, hostname, trust_score, risk_level, created_at from scans')) {
-      const userScans = mockScans.filter(s => s.user_id === params![0]).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-      return { rows: userScans };
+      const allScans = [...mockScans].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      return { rows: allScans };
+    }
+
+    if (query.includes('select * from scans where id')) {
+      const scan = mockScans.find(s => s.id === params![0]);
+      return { rows: scan ? [scan] : [] };
+    }
+
+    if (query.includes('delete from scans where id')) {
+      const idx = mockScans.findIndex(s => s.id === params![0]);
+      if (idx !== -1) {
+        mockScans.splice(idx, 1);
+        return { rows: [{ id: params![0] }] };
+      }
+      return { rows: [] };
     }
     
     return { rows: [] };

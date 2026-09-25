@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
 import api from '../services/api';
 import { Activity, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 const Dashboard = () => {
-  const { user } = useAuth();
   const [scans, setScans] = useState([]);
   const [stats, setStats] = useState({ total: 0, highRisk: 0, avgScore: 0 });
   const [loading, setLoading] = useState(true);
@@ -36,7 +34,7 @@ const Dashboard = () => {
   return (
     <div className="max-w-5xl mx-auto py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Welcome, {user?.name}</h1>
+        <h1 className="text-3xl font-bold">Dashboard</h1>
         <Link to="/analyze" className="bg-primary hover:bg-blue-600 px-4 py-2 rounded-lg font-medium transition-colors">
           New Analysis
         </Link>
