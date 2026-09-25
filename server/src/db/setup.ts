@@ -15,8 +15,12 @@ const setupDatabase = async () => {
 
   console.log('🔄 Connecting to database...');
   const pool = new Pool({
-    connectionString,
-    ssl: { rejectUnauthorized: false } // Required for Supabase connections outside their network
+    host: 'aws-0-ap-south-1.pooler.supabase.com',
+    port: 6543,
+    database: 'postgres',
+    user: 'postgres.yftmfadudaqssqvhnhta',
+    password: 'T$*FxVa.:dT6RZr',
+    ssl: { rejectUnauthorized: false }
   });
 
   try {
