@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { CheckCircle2, Circle, Loader2, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, Circle, Loader2, AlertTriangle, ShieldAlert } from 'lucide-react';
 import api from '../services/api';
 
 const Analyze = () => {
