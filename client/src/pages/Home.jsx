@@ -34,8 +34,8 @@ const Home = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl pointer-events-none"></div>
         <form onSubmit={handleAnalyze} className="relative flex flex-col md:flex-row gap-4">
           <input
-            type="url"
-            placeholder="https://example.com"
+            type="text"
+            placeholder="example.com"
             className="flex-grow bg-[#050b14]/80 backdrop-blur-sm border border-gray-700 rounded-lg px-5 py-4 text-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/50 transition-all text-white placeholder-gray-500"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
