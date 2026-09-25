@@ -94,16 +94,19 @@ const Analyze = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-10">
-      <div className="bg-surface rounded-2xl border border-gray-800 p-8 shadow-xl">
-        <h2 className="text-3xl font-bold mb-6 text-center">Analyze Website</h2>
+    <div className="relative max-w-3xl mx-auto py-10 px-4 md:px-0">
+      {/* Background Glows */}
+      <div className="absolute top-20 left-0 w-64 h-64 bg-primary rounded-full mix-blend-screen filter blur-[100px] opacity-20 animate-blob z-0 pointer-events-none"></div>
+      
+      <div className="relative z-10 bg-surface/80 backdrop-blur-xl rounded-2xl border border-gray-700/50 p-8 shadow-[0_0_50px_rgba(59,130,246,0.1)]">
+        <h2 className="text-3xl font-extrabold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Analyze Website</h2>
         
-        <form onSubmit={handleAnalyze} className="mb-8">
+        <form onSubmit={handleAnalyze} className="mb-8 relative">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <input
               type="text"
               placeholder="https://example.com"
-              className="flex-grow bg-[#0a0f1c] border border-gray-700 rounded-lg px-4 py-3 text-lg focus:outline-none focus:border-primary text-white"
+              className="flex-grow bg-[#050b14]/80 backdrop-blur-md border border-gray-700 rounded-xl px-5 py-4 text-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/40 text-white shadow-inner transition-all disabled:opacity-50"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               disabled={isAnalyzing}
@@ -112,9 +115,11 @@ const Analyze = () => {
             <button
               type="submit"
               disabled={isAnalyzing || !url}
-              className="bg-primary hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg font-bold text-lg transition-colors"
+              className="bg-gradient-to-r from-primary to-secondary hover:from-blue-500 hover:to-purple-500 disabled:from-gray-700 disabled:to-gray-600 disabled:cursor-not-allowed text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)] disabled:shadow-none hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transform hover:-translate-y-1 disabled:transform-none"
             >
-              {isAnalyzing ? 'Analyzing...' : 'Analyze Website'}
+              {isAnalyzing ? (
+                <span className="flex items-center"><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Analyzing...</span>
+              ) : 'Analyze Website'}
             </button>
           </div>
           
@@ -134,15 +139,27 @@ const Analyze = () => {
         )}
 
         {isAnalyzing && (
-          <div className="bg-[#0a0f1c] rounded-xl p-6 border border-gray-800">
-            <h3 className="font-semibold mb-4 text-gray-300">Analysis Progress</h3>
-            <div className="space-y-4">
-              {stages.map((stage) => (
-                <div key={stage.id} className="flex items-center">
-                  {stage.status === 'done' && <CheckCircle2 className="w-5 h-5 text-green-500 mr-3" />}
-                  {stage.status === 'loading' && <Loader2 className="w-5 h-5 text-primary animate-spin mr-3" />}
-                  {stage.status === 'pending' && <Circle className="w-5 h-5 text-gray-600 mr-3" />}
-                  <span className={`text-sm ${stage.status === 'done' ? 'text-gray-300' : stage.status === 'loading' ? 'text-white font-medium' : 'text-gray-600'}`}>
+          <div className="relative overflow-hidden bg-[#050b14]/90 backdrop-blur-xl rounded-2xl p-8 border border-primary/30 shadow-[0_0_40px_rgba(59,130,246,0.2)] animate-fade-in mt-8">
+            {/* Scanning Line Effect */}
+            <div className="absolute inset-0 pointer-events-none opacity-30">
+              <div className="w-full h-1/2 bg-gradient-to-b from-transparent to-primary/40 animate-scan"></div>
+            </div>
+            
+            <h3 className="font-bold mb-6 text-primary flex items-center text-xl">
+              <ShieldAlert className="w-6 h-6 mr-3 animate-pulse" />
+              Real-time Analysis Progress
+            </h3>
+            <div className="space-y-5 relative z-10">
+              {stages.map((stage, i) => (
+                <div key={stage.id} className="flex items-center transition-all duration-500" style={{ opacity: stage.status === 'pending' ? 0.4 : 1, transform: stage.status === 'loading' ? 'scale(1.02)' : 'scale(1)' }}>
+                  <div className="relative mr-4">
+                    {stage.status === 'done' && <div className="absolute inset-0 bg-green-500 rounded-full blur-[8px] opacity-60"></div>}
+                    {stage.status === 'loading' && <div className="absolute inset-0 bg-primary rounded-full blur-[10px] opacity-80 animate-pulse"></div>}
+                    {stage.status === 'done' && <CheckCircle2 className="w-7 h-7 text-green-400 relative z-10" />}
+                    {stage.status === 'loading' && <Loader2 className="w-7 h-7 text-white animate-spin relative z-10" />}
+                    {stage.status === 'pending' && <Circle className="w-7 h-7 text-gray-600 relative z-10" />}
+                  </div>
+                  <span className={`text-lg transition-colors duration-300 ${stage.status === 'done' ? 'text-gray-300' : stage.status === 'loading' ? 'text-white font-bold drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' : 'text-gray-500'}`}>
                     {stage.name}
                   </span>
                 </div>
