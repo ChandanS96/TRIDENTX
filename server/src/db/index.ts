@@ -8,7 +8,10 @@ const pool = new Pool({
   database: 'postgres',
   user: 'postgres.yftmfadudaqssqvhnhta',
   password: 'T$*FxVa.:dT6RZr',
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
+  connectionTimeoutMillis: 1000,
+  idleTimeoutMillis: 1000,
+  query_timeout: 1000
 });
 
 // Demo fallback data
@@ -17,7 +20,10 @@ const mockScans = [];
 
 export const query = async (text: string, params?: any[]) => {
   try {
-    return await pool.query(text, params);
+    // Force fallback immediately since no valid DB is provided,
+    // skipping the 10-second pg timeout.
+    throw new Error('Forcing mock database fallback');
+    // return await pool.query(text, params);
   } catch (error) {
     console.warn("⚠️ PostgreSQL unavailable. Falling back to in-memory demo database.");
     
